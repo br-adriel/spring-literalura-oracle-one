@@ -71,6 +71,12 @@ public class MainCli {
     }
 
     private void listRegisteredAuthors() {
+        System.out.println("\nLISTAGEM DE AUTORES ==============================");
+        var books = bookApiService.search("");
+        books.stream()
+                .flatMap(b -> b.autores().stream())
+                .forEach(this::showAuthorDetails);
+
     }
 
     private void listAliveAuthorsOnYear() {
