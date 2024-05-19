@@ -1,11 +1,16 @@
 package br.com.alura.literalura;
 
+import br.com.alura.literalura.cli.MainCli;
+import br.com.alura.literalura.service.BookApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class LiteraluraApplication implements CommandLineRunner {
+	@Autowired
+	BookApiService bookApiService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(LiteraluraApplication.class, args);
@@ -13,6 +18,6 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("Olá mundo");
+		new MainCli(bookApiService).start();
 	}
 }
