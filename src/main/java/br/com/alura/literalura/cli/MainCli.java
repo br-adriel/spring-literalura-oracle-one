@@ -64,6 +64,9 @@ public class MainCli {
     }
 
     private void listRegisteredBooks() {
+        System.out.println("\nLISTAGEM DE LIVROS ===============================");
+        var books = bookApiService.search("");
+        books.forEach(this::showBookListingDetails);
     }
 
     private void listRegisteredAuthors() {
