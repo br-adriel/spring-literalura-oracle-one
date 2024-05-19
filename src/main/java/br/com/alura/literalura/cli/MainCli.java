@@ -1,6 +1,7 @@
 package br.com.alura.literalura.cli;
 
 import br.com.alura.literalura.model.BookData;
+import br.com.alura.literalura.model.PersonData;
 import br.com.alura.literalura.service.BookApiService;
 
 import java.util.Scanner;
@@ -94,6 +95,19 @@ public class MainCli {
         );
 
         System.out.println("Número de downloads: " + livro.downloads() + "\n");
+    }
+
+    private void showAuthorDetails(PersonData autor) {
+        System.out.print(autor.nome());
+        if (autor.anoNascimento() != null && autor.anoMorte() != null){
+            System.out.println(" (" + autor.anoNascimento() + "-" + autor.anoMorte() + ")");
+        } else if (autor.anoNascimento() != null) {
+            System.out.println(" (" + autor.anoNascimento() + "-)");
+        } else if (autor.anoMorte() != null) {
+            System.out.println(" (-" + autor.anoMorte() + ")");
+        } else {
+            System.out.print("\n");
+        }
     }
 
     private int nextInt() {
