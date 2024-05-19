@@ -10,10 +10,10 @@ import java.util.List;
 
 @Service
 public class BookApiService {
-    public List<BookData> searchByAuthor(String authorName) {
+    public List<BookData> search(String text) {
         var json = ApiConsumer.getData(
                 "https://gutendex.com/books/?search="
-                + URLEncoder.encode(authorName.trim().toLowerCase(), StandardCharsets.UTF_8)
+                + URLEncoder.encode(text.trim().toLowerCase(), StandardCharsets.UTF_8)
         );
         return new DataConverter().convert(json, BooksApiResponse.class).livros();
     }
