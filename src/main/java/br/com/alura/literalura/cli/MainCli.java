@@ -80,6 +80,15 @@ public class MainCli {
     }
 
     private void listAliveAuthorsOnYear() {
+        System.out.println("\nBUSCAR AUTORES VIVOS EM DETERMINADO ANO ==========");
+        System.out.print("Digite o ano desejado: ");
+        var year = nextInt();
+
+        System.out.println("\nPesquisando...\n");
+        var authors = bookApiService.getAuthorsAliveOnYear(year);
+        if (authors.isEmpty()) System.out.println("[i] - Nenhum autor encontrado");
+        authors.forEach(this::showAuthorDetails);
+        System.out.println(" ");
     }
 
     private void listBooksOnLanguage() {
