@@ -14,9 +14,9 @@ public class ApiConsumer {
                 .uri(URI.create(url))
                 .build();
         try {
-            return httpClient
-                    .send(request, HttpResponse.BodyHandlers.ofString())
-                    .body();
+            var response = httpClient
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
