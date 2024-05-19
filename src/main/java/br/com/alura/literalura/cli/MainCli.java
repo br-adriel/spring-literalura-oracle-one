@@ -76,17 +76,21 @@ public class MainCli {
     }
 
     private void showBookListingDetails(BookData livro) {
-        System.out.println("Titulo:");
-        System.out.println("\t" + livro.titulo());
+        System.out.println("Titulo: " + livro.titulo());
 
-        System.out.println("Autor(es):");
-        livro.autores().forEach(a -> System.out.println("\t" + a.nome()));
+        System.out.print("Autor(a): ");
+        livro.autores().stream().findFirst().ifPresentOrElse(
+                a -> System.out.println(a.nome()),
+                () -> System.out.println("-")
+        );
 
-        System.out.println("Idioma:");
-        livro.idiomas().forEach(i -> System.out.println("\t" + i));
+        System.out.print("Idioma: ");
+        livro.idiomas().stream().findFirst().ifPresentOrElse(
+                System.out::println,
+                () -> System.out.println("-")
+        );
 
-        System.out.println("Número de downloads:");
-        System.out.println("\t" + livro.downloads() + "\n");
+        System.out.println("Número de downloads: " + livro.downloads() + "\n");
     }
 
     private int nextInt() {
