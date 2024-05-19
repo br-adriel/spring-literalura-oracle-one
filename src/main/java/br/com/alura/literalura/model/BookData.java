@@ -11,7 +11,7 @@ public record BookData(
         @JsonAlias("title") String titulo,
         @JsonAlias("subjects") List<String> assuntos,
         @JsonAlias("authors") List<PersonData> autores,
-        @JsonAlias("translators") List<PersonData> tradutores,
-        @JsonAlias("languages") List<String> idiomas
+        @JsonAlias("languages") List<String> idiomas,
+        @JsonAlias("download_count") Integer downloads
 ) {
 }
