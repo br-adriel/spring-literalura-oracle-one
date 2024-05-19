@@ -7,17 +7,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ApiConsumer {
-    private final String baseUrl;
-    private final HttpClient httpClient = HttpClient.newHttpClient();
-
-    public ApiConsumer(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String getData(String endpoint) {
+    public static String getData(String url) {
+        HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(URI.create(baseUrl + endpoint))
+                .uri(URI.create(url))
                 .build();
         try {
             return httpClient
