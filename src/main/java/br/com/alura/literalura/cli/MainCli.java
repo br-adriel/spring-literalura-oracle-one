@@ -1,5 +1,6 @@
 package br.com.alura.literalura.cli;
 
+import br.com.alura.literalura.model.BookData;
 import br.com.alura.literalura.service.BookApiService;
 
 import java.util.Scanner;
@@ -50,6 +51,16 @@ public class MainCli {
     }
 
     private void searchByTitle() {
+        System.out.println("\nBUSCA POR TÍTULO =================================");
+        System.out.print("Digite o título do livro: ");
+        var titulo = sc.nextLine();
+
+        System.out.println("\nPesquisando...\n");
+        var book = bookApiService.search(titulo).stream().findFirst();
+
+        if (book.isEmpty())
+            System.out.println("[i] - Nenhum livro encontrado\n");
+        else showBookListingDetails(book.get());
     }
 
     private void listRegisteredBooks() {
@@ -62,6 +73,20 @@ public class MainCli {
     }
 
     private void listBooksOnLanguage() {
+    }
+
+    private void showBookListingDetails(BookData livro) {
+        System.out.println("Titulo:");
+        System.out.println("\t" + livro.titulo());
+
+        System.out.println("Autor(es):");
+        livro.autores().forEach(a -> System.out.println("\t" + a.nome()));
+
+        System.out.println("Idioma:");
+        livro.idiomas().forEach(i -> System.out.println("\t" + i));
+
+        System.out.println("Número de downloads:");
+        System.out.println("\t" + livro.downloads() + "\n");
     }
 
     private int nextInt() {
