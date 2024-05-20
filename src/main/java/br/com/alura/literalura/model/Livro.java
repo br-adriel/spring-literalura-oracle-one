@@ -19,6 +19,23 @@ public class Livro {
     public Livro() {
     }
 
+    public static Livro fromBookData(BookData bookData) {
+        var livro = new Livro();
+        livro.id = Long.valueOf(bookData.id());
+        livro.downloads = bookData.downloads();
+        livro.titulo = bookData.titulo();
+
+        if (!bookData.idiomas().isEmpty()) {
+            livro.idioma = bookData.idiomas().get(0);
+        }
+
+        if (!bookData.autores().isEmpty()) {
+            livro.autor = Autor.fromPersonData(bookData.autores().get(0));
+        }
+
+        return livro;
+    }
+
     public Long getId() {
         return id;
     }
