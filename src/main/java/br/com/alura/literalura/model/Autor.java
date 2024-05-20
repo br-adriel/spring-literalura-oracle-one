@@ -68,4 +68,17 @@ public class Autor {
     public void setLivros(Set<Livro> livros) {
         this.livros = livros;
     }
+
+    @Override
+    public String toString() {
+        var stringRepresentation = nome;
+        if (anoNascimento != null && anoFalecimento != null) {
+            stringRepresentation += " (" + anoNascimento + "-" + anoFalecimento + ")";
+        } else if (anoNascimento != null) {
+            stringRepresentation += " (" + anoNascimento + "-)";
+        } else if (anoFalecimento != null) {
+            stringRepresentation += " (-" + anoFalecimento + ")";
+        }
+        return stringRepresentation;
+    }
 }
