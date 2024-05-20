@@ -113,9 +113,8 @@ public class MainCli {
         var year = nextInt();
 
         System.out.println("\nPesquisando...\n");
-        var autores = bookApiService.getAuthorsAliveOnYear(year)
-                .stream().map(Autor::fromPersonData).toList();
-        autores.forEach(autorRepository::save);
+        var autores = autorRepository
+                .findByAnoNascimentoLessThanEqualAndAnoFalecimentoGreaterThanEqual(year, year);
 
         if (autores.isEmpty())
             System.out.println("[i] - Nenhum autor encontrado\n");
