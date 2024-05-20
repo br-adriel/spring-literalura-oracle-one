@@ -7,6 +7,8 @@ import br.com.alura.literalura.repository.LivroRepository;
 import br.com.alura.literalura.service.BookApiService;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 @Component
@@ -15,6 +17,7 @@ public class MainCli {
     private final AutorRepository autorRepository;
     private final BookApiService bookApiService;
     private final Scanner sc = new Scanner(System.in);
+    private final List<String> possibleQueryLanguages;
 
     public MainCli(
             BookApiService bookApiService,
@@ -24,6 +27,12 @@ public class MainCli {
         this.bookApiService = bookApiService;
         this.livroRepository = livroRepository;
         this.autorRepository = autorRepository;
+
+        possibleQueryLanguages = new ArrayList<>();
+        possibleQueryLanguages.add("pt");
+        possibleQueryLanguages.add("en");
+        possibleQueryLanguages.add("es");
+        possibleQueryLanguages.add("fr");
     }
 
     public void start() {
@@ -115,6 +124,28 @@ public class MainCli {
     }
 
     private void listBooksOnLanguage() {
+        System.out.println("\nLISTAR LIVROS DE UM IDIOMA ESPECÍFICO ============");
+
+        boolean validLanguage = false;
+        String idioma = "";
+        while (!validLanguage) {
+            System.out.println("pt => Português");
+            System.out.println("en => Inglês");
+            System.out.println("es => Espanhol");
+            System.out.println("fr => Francês");
+            System.out.print("Escolha o idioma: ");
+
+            var inputUsuario = sc.nextLine();
+            validLanguage = possibleQueryLanguages.stream()
+                    .anyMatch(l -> l.equalsIgnoreCase(inputUsuario));
+
+            if (!validLanguage) System.out.println("\n[!] - Idioma inválido\n");
+            idioma = inputUsuario;
+        }
+        var livros = livroRepository.findByIdioma(idioma);
+        livros.forEach(l -> System.out.println(l + "\n"));
+        if (livros.isEmpty())
+            System.out.println("[i] - Nenhum livro encontrado\n");
     }
 
     private int nextInt() {
