@@ -143,6 +143,10 @@ public class MainCli {
             idioma = inputUsuario;
         }
         var livros = livroRepository.findByIdioma(idioma);
+        var quantidade = livroRepository.countByIdioma(idioma);
+
+        System.out.println("\nLISTANDO " + quantidade + " LIVRO"
+                           + (quantidade != 1 ? "S" : ""));
         livros.forEach(l -> System.out.println(l + "\n"));
         if (livros.isEmpty())
             System.out.println("[i] - Nenhum livro encontrado\n");
