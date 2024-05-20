@@ -21,6 +21,14 @@ public class Autor {
     public Autor() {
     }
 
+    public static Autor fromPersonData(PersonData personData) {
+        Autor autor = new Autor();
+        autor.nome = personData.nome();
+        autor.anoFalecimento = personData.anoMorte();
+        autor.anoNascimento = personData.anoNascimento();
+        return autor;
+    }
+
     public Long getId() {
         return id;
     }
