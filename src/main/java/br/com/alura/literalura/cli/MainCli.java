@@ -1,17 +1,29 @@
 package br.com.alura.literalura.cli;
 
-import br.com.alura.literalura.model.BookData;
-import br.com.alura.literalura.model.PersonData;
+import br.com.alura.literalura.model.Autor;
+import br.com.alura.literalura.model.Livro;
+import br.com.alura.literalura.repository.AutorRepository;
+import br.com.alura.literalura.repository.LivroRepository;
 import br.com.alura.literalura.service.BookApiService;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
+@Component
 public class MainCli {
+    private final LivroRepository livroRepository;
+    private final AutorRepository autorRepository;
     private final BookApiService bookApiService;
     private final Scanner sc = new Scanner(System.in);
 
-    public MainCli(BookApiService bookApiService) {
+    public MainCli(
+            BookApiService bookApiService,
+            LivroRepository livroRepository,
+            AutorRepository autorRepository
+    ) {
         this.bookApiService = bookApiService;
+        this.livroRepository = livroRepository;
+        this.autorRepository = autorRepository;
     }
 
     public void start() {
@@ -57,25 +69,32 @@ public class MainCli {
         var titulo = sc.nextLine();
 
         System.out.println("\nPesquisando...\n");
-        var book = bookApiService.search(titulo).stream().findFirst();
+        var bookData = bookApiService.search(titulo).stream().findFirst();
 
-        if (book.isEmpty())
+        if (bookData.isEmpty()) {
             System.out.println("[i] - Nenhum livro encontrado\n");
-        else showBookListingDetails(book.get());
+        } else {
+            var livro = Livro.fromBookData(bookData.get());
+            autorRepository.save(livro.getAutor());
+            livroRepository.save(livro);
+            System.out.println(livro + "\n");
+        }
     }
 
     private void listRegisteredBooks() {
         System.out.println("\nLISTAGEM DE LIVROS ===============================");
-        var books = bookApiService.search("");
-        books.forEach(this::showBookListingDetails);
+        var livros = livroRepository.findAll();
+        if (livros.isEmpty())
+            System.out.println("[i] - Nenhum livro encontrado\n");
+        livros.forEach(l -> System.out.println(l + "\n"));
     }
 
     private void listRegisteredAuthors() {
         System.out.println("\nLISTAGEM DE AUTORES ==============================");
-        var books = bookApiService.search("");
-        books.stream()
-                .flatMap(b -> b.autores().stream())
-                .forEach(this::showAuthorDetails);
+        var autores = autorRepository.findAll();
+        autores.forEach(System.out::println);
+        if (autores.isEmpty())
+            System.out.println("[i] - Nenhum autor encontrado\n");
 
     }
 
@@ -85,44 +104,17 @@ public class MainCli {
         var year = nextInt();
 
         System.out.println("\nPesquisando...\n");
-        var authors = bookApiService.getAuthorsAliveOnYear(year);
-        if (authors.isEmpty()) System.out.println("[i] - Nenhum autor encontrado");
-        authors.forEach(this::showAuthorDetails);
+        var autores = bookApiService.getAuthorsAliveOnYear(year)
+                .stream().map(Autor::fromPersonData).toList();
+        autores.forEach(autorRepository::save);
+
+        if (autores.isEmpty())
+            System.out.println("[i] - Nenhum autor encontrado\n");
+        autores.forEach(System.out::println);
         System.out.println(" ");
     }
 
     private void listBooksOnLanguage() {
-    }
-
-    private void showBookListingDetails(BookData livro) {
-        System.out.println("Titulo: " + livro.titulo());
-
-        System.out.print("Autor(a): ");
-        livro.autores().stream().findFirst().ifPresentOrElse(
-                a -> System.out.println(a.nome()),
-                () -> System.out.println("-")
-        );
-
-        System.out.print("Idioma: ");
-        livro.idiomas().stream().findFirst().ifPresentOrElse(
-                System.out::println,
-                () -> System.out.println("-")
-        );
-
-        System.out.println("Número de downloads: " + livro.downloads() + "\n");
-    }
-
-    private void showAuthorDetails(PersonData autor) {
-        System.out.print(autor.nome());
-        if (autor.anoNascimento() != null && autor.anoMorte() != null){
-            System.out.println(" (" + autor.anoNascimento() + "-" + autor.anoMorte() + ")");
-        } else if (autor.anoNascimento() != null) {
-            System.out.println(" (" + autor.anoNascimento() + "-)");
-        } else if (autor.anoMorte() != null) {
-            System.out.println(" (-" + autor.anoMorte() + ")");
-        } else {
-            System.out.print("\n");
-        }
     }
 
     private int nextInt() {
