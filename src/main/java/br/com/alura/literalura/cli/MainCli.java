@@ -66,6 +66,9 @@ public class MainCli {
                 case 5:
                     listBooksOnLanguage();
                     break;
+                case 6:
+                    mostDownloaded();
+                    break;
                 case 7:
                     statistics();
                     break;
@@ -153,6 +156,16 @@ public class MainCli {
                            + (quantidade != 1 ? "S" : ""));
         livros.forEach(l -> System.out.println(l + "\n"));
         if (livros.isEmpty())
+            System.out.println("[i] - Nenhum livro encontrado\n");
+    }
+
+    private void mostDownloaded() {
+        System.out.println("\nCarregando...");
+        var maisBaixados = livroRepository.findTop10ByOrderByDownloadsDesc();
+
+        System.out.println("\nTOP 10 LIVROS MAIS BAIXADOS ======================");
+        maisBaixados.forEach(l -> System.out.println(l + "\n"));
+        if (maisBaixados.isEmpty())
             System.out.println("[i] - Nenhum livro encontrado\n");
     }
 
