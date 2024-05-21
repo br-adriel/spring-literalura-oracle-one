@@ -1,6 +1,5 @@
 package br.com.alura.literalura.cli;
 
-import br.com.alura.literalura.model.Autor;
 import br.com.alura.literalura.model.Livro;
 import br.com.alura.literalura.repository.AutorRepository;
 import br.com.alura.literalura.repository.LivroRepository;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 public class MainCli {
@@ -44,6 +44,8 @@ public class MainCli {
             System.out.println("3 - Listar autores registrados");
             System.out.println("4 - Listar autores vivos em um determinado ano");
             System.out.println("5 - Listar livros em um determinado idioma");
+            System.out.println("6 - Listar livros mais baixados");
+            System.out.println("7 - Estatísticas");
             System.out.println("0 - Sair\n");
             System.out.print("Escolha a opção desejada: ");
             opcao = nextInt();
@@ -63,6 +65,9 @@ public class MainCli {
                     break;
                 case 5:
                     listBooksOnLanguage();
+                    break;
+                case 7:
+                    statistics();
                     break;
                 case 0:
                     break;
@@ -149,6 +154,31 @@ public class MainCli {
         livros.forEach(l -> System.out.println(l + "\n"));
         if (livros.isEmpty())
             System.out.println("[i] - Nenhum livro encontrado\n");
+    }
+
+    private void statistics() {
+        System.out.println("\nCarregando...");
+        var maisBaixados = livroRepository.findTop10ByOrderByDownloadsDesc();
+        var livros = livroRepository.findAll();
+        var estatisticas = livros.stream()
+                .collect(Collectors.summarizingDouble(Livro::getDownloads));
+
+        System.out.println("\nESTATÍSTICAS =====================================");
+        System.out.println("Total de livros salvos no banco de dados: " + livros.size());
+
+        if (maisBaixados.isEmpty()) System.out.println("Livro mais baixado: -");
+        else {
+            System.out.println(
+                    "Livro mais baixado: "
+                    + maisBaixados.get(0).getTitulo() + " - "
+                    + maisBaixados.get(0).getAutor()
+            );
+        }
+
+        System.out.println("Número mínimo de downloads: " + (int) estatisticas.getMin());
+        System.out.println("Número médio de downloads: " + estatisticas.getAverage());
+        System.out.println("Número máximo de downloads: " + (int) estatisticas.getMax());
+        System.out.println(" ");
     }
 
     private int nextInt() {
