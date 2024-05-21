@@ -195,8 +195,13 @@ public class MainCli {
     }
 
     private int nextInt() {
-        var input = sc.nextInt();
-        sc.nextLine();
+        int input;
+        try {
+            input = sc.nextInt();
+        } catch (Exception ignore) {
+            sc.nextLine();
+            input = -1;
+        }
         return input;
     }
 }
